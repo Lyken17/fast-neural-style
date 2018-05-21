@@ -4,11 +4,12 @@ import numpy as np
 
 
 class TransformerNet(torch.nn.Module):
-    def __init__(self):
+    def __init__(self, in_channels=3, out_channels=3):
         super(TransformerNet, self).__init__()
 
+        self.init_norm = nn.InstanceNorm2d(in_channels)
         # Initial convolution layers
-        self.conv1 = ConvLayer(3, 32, kernel_size=9, stride=1)
+        self.conv1 = ConvLayer(in_channels, 32, kernel_size=9, stride=1)
         self.in1 = InstanceNormalization(32)
         self.conv2 = ConvLayer(32, 64, kernel_size=3, stride=2)
         self.in2 = InstanceNormalization(64)
@@ -27,7 +28,7 @@ class TransformerNet(torch.nn.Module):
         self.in4 = InstanceNormalization(64)
         self.deconv2 = UpsampleConvLayer(64, 32, kernel_size=3, stride=1, upsample=2)
         self.in5 = InstanceNormalization(32)
-        self.deconv3 = ConvLayer(32, 3, kernel_size=9, stride=1)
+        self.deconv3 = ConvLayer(32, out_channels, kernel_size=9, stride=1)
 
         # Non-linearities
         self.relu = nn.ReLU()
